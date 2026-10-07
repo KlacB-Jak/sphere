@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="НИИ «Сфера»">
+<title>НИИ «Сфера» · Архив</title>
+
+<link rel="icon" type="image/x-icon" href="favicon.ico?v=1">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png?v=1">
+<link rel="shortcut icon" href="favicon.ico?v=1">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon.png?v=1">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Handjet:wght@300;400;600;800&family=VT323&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="boot" class="boot">
+    <div class="boot__scan"></div>
+    <pre class="boot__log" id="bootLog"></pre>
+</div>
+
+<div class="fx fx--scanlines"></div>
+<div class="fx fx--noise"></div>
+<div class="fx fx--vignette"></div>
+<div class="fx fx--grain"></div>
+<div class="fx fx--edge"></div>
+<div class="fx fx--glitch" id="fxGlitch"></div>
+
+<canvas id="pixelCanvas" class="pixel-canvas"></canvas>
+
+<div class="blood" id="bloodLayer"></div>
+
+<div class="scream" id="scream" aria-hidden="true">
+    <div class="scream__inner" id="screamInner"></div>
+</div>
+
+<!-- ============ СОГЛАСИЕ ============ -->
+<div class="oath" id="oath">
+    <div class="oath__wrap">
+
+        <div class="oath__stamp">NIH-04 · ЗАКРЫТЫЙ АРХИВ</div>
+
+        <h1 class="oath__title">ПРЕЖДЕ ЧЕМ ВОЙТИ</h1>
+
+        <p class="oath__lead">Нижеперечисленное не является шуткой. Прочитай каждую строку. Отметь каждую строку.</p>
+
+        <ul class="oath__list">
+            <li class="oath__item">
+                <label>
+                    <input type="checkbox" class="oath__chk">
+                    <span class="oath__box"></span>
+                    <span class="oath__text">Я подтверждаю, что не страдаю эпилепсией, не имею сердечно-сосудистых заболеваний и не нахожусь под действием препаратов, изменяющих восприятие.</span>
+                </label>
+            </li>
+            <li class="oath__item">
+                <label>
+                    <input type="checkbox" class="oath__chk">
+                    <span class="oath__box"></span>
+                    <span class="oath__text">Я понимаю, что могу умереть при просмотре сайта.</span>
+                </label>
+            </li>
+            <li class="oath__item">
+                <label>
+                    <input type="checkbox" class="oath__chk">
+                    <span class="oath__box"></span>
+                    <span class="oath__text">Я согласен, что увиденное нельзя развидеть, и что я останусь с этим навсегда.</span>
+                </label>
+            </li>
+            <li class="oath__item">
+                <label>
+                    <input type="checkbox" class="oath__chk">
+                    <span class="oath__box"></span>
+                    <span class="oath__text">Я разрешаю сайту наблюдать за мной.</span>
+                </label>
+            </li>
+            <li class="oath__item">
+                <label>
+                    <input type="checkbox" class="oath__chk">
+                    <span class="oath__box"></span>
+                    <span class="oath__text">Я не буду закрывать эту страницу, пока не пройду все разделы до конца.</span>
+                </label>
+            </li>
+            <li class="oath__item oath__item--last">
+                <label>
+                    <input type="checkbox" class="oath__chk">
+                    <span class="oath__box"></span>
+                    <span class="oath__text">Я остаюсь здесь по собственной воле.</span>
+                </label>
+            </li>
+        </ul>
+
+        <div class="oath__toggle">
+            <label>
+                <input type="checkbox" id="screamEnable" checked>
+                <span class="oath__switch"><i></i></span>
+                <span class="oath__switch-txt">Разрешить скримеры</span>
+            </label>
+        </div>
+
+        <button class="oath__btn" id="oathBtn" disabled>ВОЙТИ</button>
+
+        <div class="oath__hint">Отказ от претензий принят. Дальнейшее — не наша ответственность.</div>
+
+    </div>
+</div>
+
+<!-- ============ ОСНОВНОЙ ИНТЕРФЕЙС ============ -->
+<div class="shell" id="shell" hidden>
+
+    <header class="head">
+        <div class="head__left">
+            <a class="head__mark" href="#info" data-nav data-page="info">НИИ «СФЕРА»</a>
+            <span class="head__sub">Научно-исследовательский институт «Сфера»</span>
+        </div>
+        <div class="head__right">
+            <div class="vol">
+                <span class="vol__label">ЗВУК</span>
+                <input type="range" id="vol" min="0" max="100" value="50" class="vol__slider">
+                <button class="vol__mute" id="muteBtn">mute</button>
+            </div>
+        </div>
+    </header>
+
+    <nav class="tabs">
+        <a class="tab" data-nav data-page="info"     href="#info">Сведения</a>
+        <a class="tab" data-nav data-page="roles"    href="#roles">Роли</a>
+        <a class="tab" data-nav data-page="project"  href="#project">Проект «Морфей»</a>
+        <a class="tab" data-nav data-page="timeline" href="#timeline">Хронология</a>
+        <a class="tab" data-nav data-page="people"   href="#people">Ключевые лица</a>
+        <a class="tab" data-nav data-page="patient"  href="#patient">Пациент №19</a>
+    </nav>
+
+    <main class="content" id="content"></main>
+
+    <footer class="foot">
+        <span>НИИ «СФЕРА» · 1974—1991</span>
+    </footer>
+</div>
+
+<!-- ============================================================
+     ШАБЛОНЫ СТРАНИЦ
+     ============================================================ -->
+<script type="text/template" id="tpl-info">
+<section class="doc">
+    <h2 class="doc__title">ОБЩИЕ СВЕДЕНИЯ</h2>
+    <dl class="dl">
+        <dt>Наименование</dt><dd>Научно-исследовательский институт «Сфера».</dd>
+        <dt>Расположение</dt><dd>[ЗАСЕКРЕЧЕНО], нахождение НИИ «Сфера» в 37 км на северо-восток.</dd>
+        <dt>Годы активности</dt><dd>1974-1991.</dd>
+        <dt>Профиль (официальный)</dt><dd>НИИ нейрофизиологии и сомнологии. Изучение расстройств сна у ветеранов боевых действий.</dd>
+        <dt>Профиль (фактический)</dt><dd>Закрытый военно-медицинский проект «Морфей». Разработка методов коллективной психокоррекции через управляемый сон.</dd>
+    </dl>
+</section>
+</script>
+
+<script type="text/template" id="tpl-roles">
+<section class="doc">
+    <h2 class="doc__title">РОЛИ</h2>
+    <div class="run">
+        <div class="run__row"><span>Проводящий:</span> <b data-key="проводящий">KlacB</b></div>
+        <div class="run__row"><span>Дата проведения:</span> <b data-key="дата">XX.XX.2026, в XX:00 по МСК</b></div>
+        <div class="run__row"><span>Тип мероприятия:</span> <b data-key="тип">Закрытое Мероприятие</b></div>
+    </div>
+
+    <table class="roles" id="rolesTable">
+        <thead>
+            <tr><th>Роль</th><th>Свободна?</th></tr>
+        </thead>
+        <tbody id="rolesBody">
+            <tr class="roles__row"><td class="roles__role">???</td><td class="roles__free">свободна</td></tr>
+            <tr class="roles__row"><td class="roles__role">???</td><td class="roles__free">свободна</td></tr>
+            <tr class="roles__row"><td class="roles__role">???</td><td class="roles__free">свободна</td></tr>
+            <tr class="roles__row"><td class="roles__role">???</td><td class="roles__free">свободна</td></tr>
+            <tr class="roles__row"><td class="roles__role">???</td><td class="roles__free">свободна</td></tr>
+            <tr class="roles__row"><td class="roles__role">???</td><td class="roles__free">свободна</td></tr>
+            <tr class="roles__row"><td class="roles__role">???</td><td class="roles__free">свободна</td></tr>
+            <tr class="roles__row"><td class="roles__role">???</td><td class="roles__free">свободна</td></tr>
+            <tr class="roles__row"><td class="roles__role">Статист</td><td class="roles__free">свободна</td></tr>
+            <tr class="roles__row"><td class="roles__role">Статист</td><td class="roles__free">свободна</td></tr>
+            <tr class="roles__row"><td class="roles__role">Статист</td><td class="roles__free">свободна</td></tr>
+        </tbody>
+    </table>
+
+    <p class="run__footer" data-key="футер">Для записи необходимо написать KlacB в личные сообщения</p>
+</section>
+</script>
+
+<script type="text/template" id="tpl-project">
+<section class="doc">
+    <h2 class="doc__title">ПРОЕКТ «МОРФЕЙ»</h2>
+
+    <div class="project-lead">
+        <div><b>Руководитель:</b> Доктор Вельский Андрей Петрович, 1928 г.р., нейрофизиолог, кандидат наук.</div>
+        <div><b>Заместитель:</b> Ткачёва Людмила Сергеевна, 1961 г.р., старшая медсестра.</div>
+        <div><b>Технический руководитель:</b> Мельник Виктор Иванович, 1966 г.р., инженер-программист.</div>
+    </div>
+
+    <h3 class="doc__sub">Цель проекта</h3>
+    <p>Разработка метода лечения посттравматического стрессового расстройства (ПТСР) у военнослужащих путем погружения группы пациентов в коллективный сон. Внутри сна пациенты переживают травмирующие события в контролируемых условиях, что позволяет психике «перезаписать» страх в безопасное воспоминание.</p>
+
+    <h3 class="doc__sub">Оборудование</h3>
+    <p><b>ЭВМ «Морфей»</b> — электронно-вычислительная машина, ядро системы. Эта система позволяет симулировать и управлять снами, она была разработана и отточена под обработку огромного потока данных, что позволяет без проблем контролировать течение сна.</p>
+    <p><b>Криокамеры</b> — капсулы сенсорной депривации, подключенные к «Морфею». Они погружают человека в искусственную кому, в системе криокамер также располагается система жизнеобеспечения, которая в случае нештатного состояния оператора выводит из состояния сна.</p>
+
+    <h3 class="doc__sub">Принцип работы</h3>
+    <p>Пациенты помещаются в криокамеры, подключают датчики для слежения состояния, подключают воздушные маски и нажимают на кнопку готовности (далее происходит ожидания всех операторов). «Морфей» синхронизирует их мозговую активность и формирует единое сновидческое пространство. Ведущий оператор контролирует сценарий сна (есть технологии позволяющие контролировать сценарий сна в состоянии автопилота. Технология была отклонена связи с множеством ошибок и гибелью операторов, но в системах технология осталась).</p>
+</section>
+</script>
+
+<script type="text/template" id="tpl-timeline">
+<section class="doc">
+    <h2 class="doc__title">ХРОНОЛОГИЯ СОБЫТИЙ</h2>
+
+    <div class="tl">
+
+        <article class="tl__row">
+            <div class="tl__year">1974—1985</div>
+            <div class="tl__mark"><span></span></div>
+            <div class="tl__card">
+                <div class="tl__h">Разработка</div>
+                <p>Проект запущен по закрытому постановлению. Первые эксперименты - на животных. С 1979 года - на добровольцах из числа ветеранов Афганистана.</p>
+            </div>
+        </article>
+
+        <article class="tl__row">
+            <div class="tl__year">1985—1987</div>
+            <div class="tl__mark"><span></span></div>
+            <div class="tl__card">
+                <div class="tl__h">Активная фаза</div>
+                <p>Проведено 47 сеансов коллективного сна. Результаты признаны «многообещающими». Побочные эффекты: Головные боли, временная амнезия, ночные кошмары. Считались допустимыми.</p>
+            </div>
+        </article>
+
+        <article class="tl__row tl__row--key">
+            <div class="tl__year">12.03.1987</div>
+            <div class="tl__mark"><span></span></div>
+            <div class="tl__card">
+                <div class="tl__h">Инцидент</div>
+                <p>В проект включён пациент №19 — сержант Крылов Сергей Дмитриевич, 1958 г.р. Участник боевых действий. Диагноз: ПТСР, тяжелая форма. Семья погибла в 1984 году в результате обстрела.</p>
+                <p>Во время сеанса №48 показатели мозга Крылова вышли за пределы допустимых значений. Синхронизация с «Морфеем» стала необратимой. Остальные пять пациентов, находившиеся в криокамерах, впали в кому. Вывести их не удалось.</p>
+                <p>Крылова отключить от системы не смогли. При попытке разрыва соединения «Морфей» блокировал все команды. Инженер Мельник принял решение оставить пациента подключённым до выяснения причин.</p>
+            </div>
+        </article>
+
+        <article class="tl__row">
+            <div class="tl__year">1987—1991</div>
+            <div class="tl__mark"><span></span></div>
+            <div class="tl__card">
+                <div class="tl__h">Наблюдение</div>
+                <p>Крылов находился в криокамере №1. Жизненные показатели стабильны. Мозговая активность - на уровне бодрствования. Пациент не старел. Не приходил в сознание. Не умирал.</p>
+                <p>Персонал начал жаловаться на кошмары. Ткачёва фиксировала случаи коллективных снов: сотрудники видели один и тот же сон - детскую комнату, мальчика, который просит остаться.</p>
+            </div>
+        </article>
+
+        <article class="tl__row">
+            <div class="tl__year">1991</div>
+            <div class="tl__mark"><span></span></div>
+            <div class="tl__card">
+                <div class="tl__h">Закрытие</div>
+                <p>Финансирование прекращено. Комплекс законсервирован. Крылов оставлен в криокамере - вывезти не удалось по техническим причинам. Оборудование не демонтировано. Персонал уволен с подпиской о неразглашении.</p>
+            </div>
+        </article>
+
+        <article class="tl__row">
+            <div class="tl__year">1994—2010</div>
+            <div class="tl__mark"><span></span></div>
+            <div class="tl__card">
+                <div class="tl__h">Заброшенность</div>
+                <p>Территория не охраняется. Здания разрушаются. Подземный бункер продолжает функционировать автономно.</p>
+            </div>
+        </article>
+
+        <article class="tl__row tl__row--key">
+            <div class="tl__year">2010—2025</div>
+            <div class="tl__mark"><span></span></div>
+            <div class="tl__card">
+                <div class="tl__h">«Сонная болезнь»</div>
+                <p>Зафиксированы случаи массового пробуждения: люди по всей стране засыпают и не просыпаются. Медицина не может объяснить причину. Количество пострадавших растет.</p>
+                <p>Связь с НИИ «Сфера» не подтверждена официально.</p>
+            </div>
+        </article>
+
+    </div>
+</section>
+</script>
+
+<script type="text/template" id="tpl-people">
+<section class="doc">
+    <h2 class="doc__title">КЛЮЧЕВЫЕ ЛИЦА</h2>
+
+    <div class="people">
+        <article class="person person--alive">
+            <div class="person__name">Крылов Сергей Дмитриевич</div>
+            <p>Пациент №19. Источник «Сферы». Находится в криокамере №1 с 1987 года. Жив.</p>
+        </article>
+
+        <article class="person">
+            <div class="person__name">Вельский Андрей Петрович</div>
+            <p>Руководитель проекта. Умер в 1993 году. Причина - остановка сердца. Обстоятельства не установлены.</p>
+        </article>
+
+        <article class="person">
+            <div class="person__name">Ткачёва Людмила Сергеевна</div>
+            <p>Старшая медсестра. Уволилась в 1991 году. Местонахождение неизвестно.</p>
+        </article>
+
+        <article class="person">
+            <div class="person__name">Мельник Виктор Иванович</div>
+            <p>Инженер. Уволился в 1992 году. Местонахождение неизвестно. Именно он подключил Крылова к «Морфею» и оставил его там.</p>
+        </article>
+
+        <article class="person person--lost">
+            <div class="person__name">Вельская Анна Андреевна</div>
+            <p>Дочь руководителя проекта. Врач-невролог. Последняя, кто пытался войти в контакт со «Сферой». Пропала без вести в 2024 году. Предположительно, находится внутри сна.</p>
+        </article>
+    </div>
+</section>
+</script>
+
+<script type="text/template" id="tpl-patient">
+<section class="doc doc--danger">
+    <h2 class="doc__title">ПАЦИЕНТ №19</h2>
+
+    <div class="patient__card">
+        <div class="patient__name">КРЫЛОВ СЕРГЕЙ ДМИТРИЕВИЧ</div>
+
+        <dl class="dl dl--tight">
+            <dt>Год рождения</dt><dd>1958 г.р.</dd>
+            <dt>Звание</dt><dd>сержант</dd>
+            <dt>Диагноз</dt><dd>ПТСР, тяжелая форма</dd>
+            <dt>Семья</dt><dd>погибла в 1984 году в результате обстрела</dd>
+            <dt>Статус</dt><dd>участник боевых действий</dd>
+        </dl>
+
+        <p>Источник «Сферы». Находится в криокамере №1 с 1987 года. Жив.</p>
+        <p>Жизненные показатели стабильны. Мозговая активность - на уровне бодрствования. Пациент не старел. Не приходил в сознание. Не умирал.</p>
+        <p>Крылова отключить от системы не смогли. При попытке разрыва соединения «Морфей» блокировал все команды.</p>
+    </div>
+</section>
+</script>
+
+<script src="script.js"></script>
+</body>
+</html>
